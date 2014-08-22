@@ -1,0 +1,47 @@
+{
+  "name": "mimosa-esperanto-es6-modules",
+  "version": "0.1.0",
+  "homepage": "https://github.com/dbashford/mimosa-esperanto-es6-modules",
+  "author": "David Bashford",
+  "description": "An ES6 module transpiler for Mimosa using Esperanto",
+  "contributors": [
+    {
+      "name": "David Bashford",
+      "email": "dbashford@hotmail.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dbashford/mimosa-esperanto-es6-modules"
+  },
+  "keywords": [
+    "mimosa",
+    "mmodule",
+    "es6",
+    "harmony",
+    "module",
+    "amd",
+    "commonjs"
+  ],
+  "dependencies": {
+    "esperanto":"0.3.10"
+  },
+  "devDependencies": {
+    "mocha": "1.9.0",
+    "chai": "1.5.0",
+    "rimraf": "2.2.8",
+    "validatemimosa": "1.0.2",
+    "logmimosa":"1.0.3",
+    "lodash": "2.4.1",
+    "sinon": "1.10.3"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10"
+  },
+  "main": "./src/index",
+  "scripts": {
+    "prepublish": "mimosa build",
+    "test": "node_modules/.bin/mocha"
+  }
+}
