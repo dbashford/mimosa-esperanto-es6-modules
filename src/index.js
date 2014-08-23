@@ -24,7 +24,11 @@ var _transpile = function( mimosaConfig, options, next ) {
           logger.debug( "skipping esperanto transpiling for [[ " + f.inputFileName + " ]], file is excluded via string path" );
         } else {
           if ( f.outputFileText ) {
-            f.outputFileText = transpile( f.outputFileText, e.options || {} );
+            try {
+              f.outputFileText = transpile( f.outputFileText, e.options || {} );
+            } catch ( err ) {
+              mimosaConfig.log.error( "esperanto encountered a problem transpiling [[ " + f.inputFileName + " ]]\n" + err );
+            }
           }
         }
       }
