@@ -1,6 +1,6 @@
 {
   "name": "mimosa-esperanto-es6-modules",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "homepage": "https://github.com/dbashford/mimosa-esperanto-es6-modules",
   "author": "David Bashford",
   "description": "An ES6 module transpiler for Mimosa using Esperanto",
@@ -24,7 +24,7 @@
     "commonjs"
   ],
   "dependencies": {
-    "esperanto":"0.3.10"
+    "esperanto":"0.3.11"
   },
   "devDependencies": {
     "mocha": "1.9.0",

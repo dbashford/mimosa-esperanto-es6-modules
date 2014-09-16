@@ -128,7 +128,7 @@ describe("The esparanto module", function() {
       esparantoModule.resetTranspile();
       callback( mC, options, function() {
         expect(options.files[0].outputFileText).to.eql(
-          "define(['foo','exports'],function (exports) {\n\n\t'use strict';\n\t\n\texports.default = Foo;\n\n});");
+          "define(['foo'],function () {\n\n\t'use strict';\n\t\n\treturn Foo;\n\n});");
         done();
       });
     });

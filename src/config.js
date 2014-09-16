@@ -6,7 +6,7 @@ exports.defaults = function() {
       type:"amd",
       exclude: [/[/\\]vendor[/\\]/, /[/\\]main[\.-]/, /-main.js$/, /[/\\]common.js$/],
       options: {
-        defaultOnly: false,
+        defaultOnly: true,
         addUseStrict: true
       }
     }
@@ -22,7 +22,7 @@ exports.placeholder = function () {
     "                          # watch.sourceDir. Regexes are applied to the entire path.\n" +
     "    options:              # pass-through options to esperanto\n" +
     "                          # Details: https://github.com/Rich-Harris/esperanto/wiki\n" +
-    "      defaultOnly: false  # whether to run esperanto in default only mode\n" +
+    "      defaultOnly: true   # whether to run esperanto in default only mode\n" +
     "      addUseStrict: true  # whether to add a 'use strict' pragma.\n\n";
   return ph;
 };
