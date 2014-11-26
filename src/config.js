@@ -55,5 +55,15 @@ exports.validate = function( config, validators ) {
     }
   }
 
+  if ( !errors.length && !config.isBuild) {
+    if ( !e.options ) {
+      e.options = {}
+    }
+
+    if ( !e.options.sourceMap ) {
+      e.options.sourceMap = "inline";
+    }
+  }
+
   return errors;
 };

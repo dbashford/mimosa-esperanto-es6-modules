@@ -2,7 +2,7 @@ mimosa-esperanto-es6-modules
 ===========
 ## Overview
 
-This module will allow you to utilize ES6 module syntax when building your client code.  It will transpile your JavaScript with ES6 syntax to AMD or CommonJS compliant JavaScript.
+This module will allow you to utilize ES6 module syntax when building your client code.  It will transpile your JavaScript with ES6 syntax to AMD or CommonJS compliant JavaScript and include source maps.
 
 This module wraps [Rich Harris'](https://github.com/Rich-Harris) [esperanto](https://github.com/Rich-Harris/esperanto) library which performs the transpiling.
 
@@ -15,6 +15,8 @@ Add `'esperanto-es6-modules'` to your list of modules.  That's all!  Mimosa will
 ## Functionality
 
 This module will take your ES6 module syntax code and compile it down to a syntax usable with common module specs: AMD and CommonJS.
+
+Compiled output will include inline source maps unless running `mimosa build`.
 
 ## Default Config
 
