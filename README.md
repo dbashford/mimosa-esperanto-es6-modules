@@ -23,8 +23,7 @@ esperanto: {
   type:"amd",
   exclude: [/[/\\]vendor[/\\]/, /[/\\]main[\.-]/, /-main.js$/, /[/\\]common.js$/],
   options: {
-    defaultOnly: true,
-    addUseStrict: true
+    strict: false
   }
 }
 ```

@@ -6,8 +6,7 @@ exports.defaults = function() {
       type:"amd",
       exclude: [/[/\\]vendor[/\\]/, /[/\\]main[\.-]/, /-main.js$/, /[/\\]common.js$/],
       options: {
-        defaultOnly: true,
-        addUseStrict: true
+        strict: false
       }
     }
   };
@@ -22,8 +21,7 @@ exports.placeholder = function () {
     "                          # watch.sourceDir. Regexes are applied to the entire path.\n" +
     "    options:              # pass-through options to esperanto\n" +
     "                          # Details: https://github.com/Rich-Harris/esperanto/wiki\n" +
-    "      defaultOnly: true   # whether to run esperanto in default only mode\n" +
-    "      addUseStrict: true  # whether to add a 'use strict' pragma.\n\n";
+    "      strict: false       # https://github.com/Rich-Harris/esperanto/wiki/Strict-mode#so-what-about-strict-mode.\n\n";
   return ph;
 };
 
@@ -51,8 +49,7 @@ exports.validate = function( config, validators ) {
       validators.ifExistsFileExcludeWithRegexAndString( errors, "esperanto.exclude", e, config.watch.sourceDir );
 
       if ( validators.ifExistsIsObject( errors, "esperanto.options", e.options ) ) {
-        validators.ifExistsIsBoolean( errors, "esperanto.options.defaultOnly", e.options.defaultOnly );
-        validators.ifExistsIsBoolean( errors, "esperanto.options.addUseStrict", e.options.addUseStrict );
+        validators.ifExistsIsBoolean( errors, "esperanto.options.strict", e.options.strict );
         validators.ifExistsIsString( errors, "esperanto.options.indent", e.options.indent );
       }
     }

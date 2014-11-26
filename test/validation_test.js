@@ -118,16 +118,14 @@ describe("module validation", function() {
       esperanto: {
         type: "amd",
         options: {
-          defaultOnly: 1,
-          addUseStrict: 2,
+          strict: 2,
           indent: 3
         }
       }
     };
     var errors = validate( config, validators );
-    expect( errors.length ).to.eql( 3 );
-    expect( errors[0] ).to.eql( "esperanto.options.defaultOnly must be a boolean." );
-    expect( errors[1] ).to.eql( "esperanto.options.addUseStrict must be a boolean." );
-    expect( errors[2] ).to.eql( "esperanto.options.indent must be a string." );
+    expect( errors.length ).to.eql( 2 );
+    expect( errors[0] ).to.eql( "esperanto.options.strict must be a boolean." );
+    expect( errors[1] ).to.eql( "esperanto.options.indent must be a string." );
   });
 });

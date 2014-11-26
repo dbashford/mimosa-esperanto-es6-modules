@@ -46,6 +46,30 @@ describe("The esparanto module", function() {
       registration( mimosaConfig, register );
     });
 
+    var test = function(desc, outputFileText, output, strict, amd, otherOpts) {
+      it(desc, function(done) {
+        var mC = _.cloneDeep( mimosaConfig );
+        mC.esperanto.options.strict = strict;
+        mC.esperanto.isAMD = amd;
+        if ( otherOpts ) {
+          mC.esperanto = _.merge( mC.esperanto, otherOpts );
+        }
+        var options = {
+          files:[{
+            inputFileName: "/foo/bar/baz",
+            outputFilename: "/a/b/c",
+            inputFileText: "who cares",
+            outputFileText: outputFileText
+          }]
+        };
+        esparantoModule.resetTranspile();
+        callback( mC, options, function() {
+          expect(options.files[0].outputFileText).to.eql(output);
+          done();
+        });
+      });
+    };
+
     it("should call the callback when no files", function(done) {
       var mC = _.cloneDeep( mimosaConfig );
       var cb = sinon.spy();
@@ -57,141 +81,85 @@ describe("The esparanto module", function() {
       }, 200)
     });
 
-    it("should transpile files", function(done) {
-      var mC = _.cloneDeep( mimosaConfig );
-      var options = {
-        files:[{
-          inputFileName: "/foo/bar/baz",
-          outputFilename: "/a/b/c",
-          inputFileText: "who cares",
-          outputFileText: "import 'foo'"
-        }]
-      };
-      esparantoModule.resetTranspile();
-      callback( mC, options, function() {
-        expect(options.files[0].outputFileText).to.eql(
-          "define(['foo'],function () {\n\n\t'use strict';\n\n});");
-        done();
-      });
-    });
+    test("should transpile files",
+      "import 'foo'",
+      "define(['foo'], function () {\n\n\t'use strict';\n\n});",
+      true,
+      true);
 
-    it("should transpile to commonjs", function(done) {
-      var mC = _.cloneDeep( mimosaConfig );
-      mC.esperanto.isAMD = false;
-      var options = {
-        files:[{
-          inputFileName: "/foo/bar/baz",
-          outputFilename: "/a/b/c",
-          inputFileText: "who cares",
-          outputFileText: "import 'foo'"
-        }]
-      };
-      esparantoModule.resetTranspile();
-      callback( mC, options, function() {
-        expect(options.files[0].outputFileText).to.eql(
-          "require('foo');");
-        done();
-      });
-    });
+    // WITHOUT EXPORTS
 
-    it("should transpile files without use strict when specified", function(done) {
-      var mC = _.cloneDeep( mimosaConfig );
-      var options = {
-        files:[{
-          inputFileName: "/foo/bar/baz",
-          outputFilename: "/a/b/c",
-          inputFileText: "who cares",
-          outputFileText: "import 'foo'"
-        }]
-      };
+    test("should transpile to commonjs without strict mode",
+      "import bar from 'foo'\nvar foo = \"yeah\"\nbar.what();",
+      "(function () {\n\n\t'use strict';\n\t\n\tvar bar = require('foo')\n\tvar foo = \"yeah\"\n\tbar.what();\n\n}).call(global);",
+      false,
+      false);
 
-      mC.esperanto.options.addUseStrict = false
-      esparantoModule.resetTranspile();
-      callback( mC, options, function() {
-        expect(options.files[0].outputFileText).to.eql(
-          "define(['foo'],function () {\n\n\t\n\n});");
-        done();
-      });
-    });
+    test("should transpile to commonjs with strict mode",
+      "import bar from 'foo'\nvar foo = \"yeah\";\nbar.what();",
+      "(function () {\n\n\t'use strict';\n\n\tvar foo = require('foo');\n\t\n\tvar foo = \"yeah\";\n\tfoo.default.what();\n\n}).call(global);",
+      true,
+      false);
 
-    it("should transpile files with export", function(done) {
-      var mC = _.cloneDeep( mimosaConfig );
-      var options = {
-        files:[{
-          inputFileName: "/foo/bar/baz",
-          outputFilename: "/a/b/c",
-          inputFileText: "who cares",
-          outputFileText: "import 'foo'\nexport default Foo;"
-        }]
-      };
+    test("should transpile to amd with strict mode",
+      "import bar from 'foo'\nvar foo = \"yeah\";\nbar.what();",
+      "define(['foo'], function (foo) {\n\n\t'use strict';\n\n\tvar foo = \"yeah\";\n\tfoo.default.what();\n\n});",
+      true,
+      true);
 
-      esparantoModule.resetTranspile();
-      callback( mC, options, function() {
-        expect(options.files[0].outputFileText).to.eql(
-          "define(['foo'],function () {\n\n\t'use strict';\n\t\n\treturn Foo;\n\n});");
-        done();
-      });
-    });
+    test("should transpile to amd without strict mode",
+      "import bar from 'foo'\nvar foo = \"yeah\";\nbar.what();",
+      "define(['foo'], function (bar) {\n\n\t'use strict';\n\t\n\tvar foo = \"yeah\";\n\tbar.what();\n\n});",
+      false,
+      true);
 
-    it("should transpile files with export", function(done) {
-      var mC = _.cloneDeep( mimosaConfig );
-      var options = {
-        files:[{
-          inputFileName: "/foo/bar/baz",
-          outputFilename: "/a/b/c",
-          inputFileText: "who cares",
-          outputFileText: "import 'foo'\nexport default Foo;"
-        }]
-      };
+    // WITH EXPORTS
 
-      mC.esperanto.options.defaultOnly = true;
-      esparantoModule.resetTranspile();
-      callback( mC, options, function() {
-        expect(options.files[0].outputFileText).to.eql(
-          "define(['foo'],function () {\n\n\t'use strict';\n\t\n\treturn Foo;\n\n});");
-        done();
-      });
-    });
+    test("should transpile to commonjs without strict mode with default exports",
+      "import bar from 'foo'\nvar foo = \"yeah\"\nbar.what();\nexport default bar",
+      "(function () {\n\n\t'use strict';\n\t\n\tvar bar = require('foo')\n\tvar foo = \"yeah\"\n\tbar.what();\n\tmodule.exports = bar\n\n}).call(global);",
+      false,
+      false);
 
-    it("should not transpile files excluded via regex", function(done) {
-      var mC = _.cloneDeep( mimosaConfig );
-      var options = {
-        files:[{
-          inputFileName: "/foo/bar/baz",
-          outputFilename: "/a/b/c",
-          inputFileText: "who cares",
-          outputFileText: "import 'foo'\nexport default Foo;"
-        }]
-      };
+    test("should transpile to commonjs with strict mode with default exports",
+      "import bar from 'foo'\nvar foo = \"yeah\";\nbar.what();\nexport default bar",
+      "(function () {\n\n\t'use strict';\n\n\tvar foo = require('foo');\n\t\n\tvar foo = \"yeah\";\n\tfoo.default.what();\n\texports.default = foo.default\n\n}).call(global);",
+      true,
+      false);
 
-      mC.esperanto.excludeRegex = new RegExp([/foo/].join("|"), "i");
-      esparantoModule.resetTranspile();
-      callback( mC, options, function() {
-        expect(options.files[0].outputFileText).to.eql("import 'foo'\nexport default Foo;")
+    test("should transpile to amd with strict mode with default exports",
+      "import bar from 'foo'\nvar foo = \"yeah\";\nbar.what();\nexport default bar",
+      "define(['exports', 'foo'], function (exports, foo) {\n\n\t'use strict';\n\n\tvar foo = \"yeah\";\n\tfoo.default.what();\n\texports.default = foo.default\n\n});",
+      true,
+      true);
 
-        done();
-      });
-    });
+    // exporting variable rather than previous import
+    test("should transpile to amd with strict mode with default exports",
+      "import bar from 'foo'\nvar something = \"yeah\";\nbar.what();\nexport default something",
+      "define(['exports', 'foo'], function (exports, foo) {\n\n\t'use strict';\n\n\tvar something = \"yeah\";\n\tfoo.default.what();\n\texports.default = something\n\n});",
+      true,
+      true);
 
+    test("should transpile to amd without strict mode with default exports",
+      "import bar from 'foo'\nvar foo = \"yeah\";\nbar.what();\nexport default bar",
+      "define(['foo'], function (bar) {\n\n\t'use strict';\n\t\n\tvar foo = \"yeah\";\n\tbar.what();\n\t\n\treturn bar;\n\n});",
+      false,
+      true);
 
-    it("should not transpile files excluded via string path", function(done) {
-      var mC = _.cloneDeep( mimosaConfig );
-      var options = {
-        files:[{
-          inputFileName: "/foo/bar/baz",
-          outputFilename: "/a/b/c",
-          inputFileText: "who cares",
-          outputFileText: "import 'foo'\nexport default Foo;"
-        }]
-      };
+    // EXCLUDE TESTS
 
-      mC.esperanto.exclude = ["/foo/bar/baz"];
-      esparantoModule.resetTranspile();
-      callback( mC, options, function() {
-        expect(options.files[0].outputFileText).to.eql("import 'foo'\nexport default Foo;")
-        done();
-      });
-    });
+    test("should not transpile files excluded via regex",
+      "import 'foo'\nexport default Foo;",
+      "import 'foo'\nexport default Foo;",
+      true,
+      true,
+      { excludeRegex: new RegExp([/foo/].join("|"), "i")});
 
+    test("should not transpile files excluded via regex",
+      "import 'foo'\nexport default Foo;",
+      "import 'foo'\nexport default Foo;",
+      true,
+      true,
+      { exclude: ["/foo/bar/baz"] });
   });
 });

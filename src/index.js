@@ -25,7 +25,7 @@ var _transpile = function( mimosaConfig, options, next ) {
         } else {
           if ( f.outputFileText ) {
             try {
-              f.outputFileText = transpile( f.outputFileText, e.options || {} );
+              f.outputFileText = transpile( f.outputFileText, e.options || {} ).code;
             } catch ( err ) {
               mimosaConfig.log.error( "esperanto encountered a problem transpiling [[ " + f.inputFileName + " ]]\n" + err );
             }
