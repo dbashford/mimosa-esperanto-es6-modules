@@ -57,7 +57,7 @@ exports.validate = function( config, validators ) {
 
   if ( !errors.length && !config.isBuild) {
     if ( !e.options ) {
-      e.options = {}
+      e.options = {};
     }
 
     if ( !e.options.sourceMap ) {
