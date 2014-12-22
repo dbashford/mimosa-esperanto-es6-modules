@@ -91,25 +91,25 @@ describe("The esparanto module", function() {
 
     test("should transpile to commonjs without strict mode",
       "import bar from 'foo'\nvar foo = \"yeah\"\nbar.what();",
-      "(function () {\n\n\t'use strict';\n\t\n\tvar bar = require('foo')\n\tvar foo = \"yeah\"\n\tbar.what();\n\n}).call(global);",
+      "(function () {\n\n\t'use strict';\n\n\tvar bar = require('foo')\n\tvar foo = \"yeah\"\n\tbar.what();\n\n}).call(global);",
       false,
       false);
 
     test("should transpile to commonjs with strict mode",
       "import bar from 'foo'\nvar foo = \"yeah\";\nbar.what();",
-      "(function () {\n\n\t'use strict';\n\n\tvar foo = require('foo');\n\t\n\tvar foo = \"yeah\";\n\tfoo.default.what();\n\n}).call(global);",
+      "(function () {\n\n\t'use strict';\n\n\tvar bar = require('foo');\n\n\tvar foo = \"yeah\";\n\tbar['default'].what();\n\n}).call(global);",
       true,
       false);
 
     test("should transpile to amd with strict mode",
       "import bar from 'foo'\nvar foo = \"yeah\";\nbar.what();",
-      "define(['foo'], function (foo) {\n\n\t'use strict';\n\n\tvar foo = \"yeah\";\n\tfoo.default.what();\n\n});",
+      "define(['foo'], function (bar) {\n\n\t'use strict';\n\n\tvar foo = \"yeah\";\n\tbar['default'].what();\n\n});",
       true,
       true);
 
     test("should transpile to amd without strict mode",
       "import bar from 'foo'\nvar foo = \"yeah\";\nbar.what();",
-      "define(['foo'], function (bar) {\n\n\t'use strict';\n\t\n\tvar foo = \"yeah\";\n\tbar.what();\n\n});",
+      "define(['foo'], function (bar) {\n\n\t'use strict';\n\n\tvar foo = \"yeah\";\n\tbar.what();\n\n});",
       false,
       true);
 
@@ -117,32 +117,32 @@ describe("The esparanto module", function() {
 
     test("should transpile to commonjs without strict mode with default exports",
       "import bar from 'foo'\nvar foo = \"yeah\"\nbar.what();\nexport default bar",
-      "(function () {\n\n\t'use strict';\n\t\n\tvar bar = require('foo')\n\tvar foo = \"yeah\"\n\tbar.what();\n\tmodule.exports = bar\n\n}).call(global);",
+      "(function () {\n\n\t'use strict';\n\n\tvar bar = require('foo')\n\tvar foo = \"yeah\"\n\tbar.what();\n\tmodule.exports = bar\n\n}).call(global);",
       false,
       false);
 
     test("should transpile to commonjs with strict mode with default exports",
       "import bar from 'foo'\nvar foo = \"yeah\";\nbar.what();\nexport default bar",
-      "(function () {\n\n\t'use strict';\n\n\tvar foo = require('foo');\n\t\n\tvar foo = \"yeah\";\n\tfoo.default.what();\n\texports.default = foo.default\n\n}).call(global);",
+      "(function () {\n\n\t'use strict';\n\n\tvar bar = require('foo');\n\n\tvar foo = \"yeah\";\n\tbar['default'].what();\n\texports['default'] = bar['default']\n\n}).call(global);",
       true,
       false);
 
     test("should transpile to amd with strict mode with default exports",
       "import bar from 'foo'\nvar foo = \"yeah\";\nbar.what();\nexport default bar",
-      "define(['exports', 'foo'], function (exports, foo) {\n\n\t'use strict';\n\n\tvar foo = \"yeah\";\n\tfoo.default.what();\n\texports.default = foo.default\n\n});",
+      "define(['exports', 'foo'], function (exports, bar) {\n\n\t'use strict';\n\n\tvar foo = \"yeah\";\n\tbar['default'].what();\n\texports['default'] = bar['default']\n\n});",
       true,
       true);
 
     // exporting variable rather than previous import
     test("should transpile to amd with strict mode with default exports",
       "import bar from 'foo'\nvar something = \"yeah\";\nbar.what();\nexport default something",
-      "define(['exports', 'foo'], function (exports, foo) {\n\n\t'use strict';\n\n\tvar something = \"yeah\";\n\tfoo.default.what();\n\texports.default = something\n\n});",
+      "define(['exports', 'foo'], function (exports, bar) {\n\n\t'use strict';\n\n\tvar something = \"yeah\";\n\tbar['default'].what();\n\texports['default'] = something\n\n});",
       true,
       true);
 
     test("should transpile to amd without strict mode with default exports",
       "import bar from 'foo'\nvar foo = \"yeah\";\nbar.what();\nexport default bar",
-      "define(['foo'], function (bar) {\n\n\t'use strict';\n\t\n\tvar foo = \"yeah\";\n\tbar.what();\n\t\n\treturn bar;\n\n});",
+      "define(['foo'], function (bar) {\n\n\t'use strict';\n\n\tvar foo = \"yeah\";\n\tbar.what();\n\n\treturn bar;\n\n});",
       false,
       true);
 
