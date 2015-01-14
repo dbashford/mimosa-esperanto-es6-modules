@@ -57,7 +57,7 @@ describe("The esparanto module", function() {
         var options = {
           files:[{
             inputFileName: "/foo/bar/baz",
-            outputFilename: "/a/b/c",
+            outputFileName: "/a/b/c",
             inputFileText: "who cares",
             outputFileText: outputFileText
           }]
@@ -91,13 +91,13 @@ describe("The esparanto module", function() {
 
     test("should transpile to commonjs without strict mode",
       "import bar from 'foo'\nvar foo = \"yeah\"\nbar.what();",
-      "(function () {\n\n\t'use strict';\n\n\tvar bar = require('foo')\n\tvar foo = \"yeah\"\n\tbar.what();\n\n}).call(global);",
+      "'use strict';\n\nvar bar = require('foo');\nvar foo = \"yeah\"\nbar.what();",
       false,
       false);
 
     test("should transpile to commonjs with strict mode",
       "import bar from 'foo'\nvar foo = \"yeah\";\nbar.what();",
-      "(function () {\n\n\t'use strict';\n\n\tvar bar = require('foo');\n\n\tvar foo = \"yeah\";\n\tbar['default'].what();\n\n}).call(global);",
+      "'use strict';\n\nvar bar = require('foo');\n\nvar foo = \"yeah\";\nbar['default'].what();",
       true,
       false);
 
@@ -117,13 +117,13 @@ describe("The esparanto module", function() {
 
     test("should transpile to commonjs without strict mode with default exports",
       "import bar from 'foo'\nvar foo = \"yeah\"\nbar.what();\nexport default bar",
-      "(function () {\n\n\t'use strict';\n\n\tvar bar = require('foo')\n\tvar foo = \"yeah\"\n\tbar.what();\n\tmodule.exports = bar\n\n}).call(global);",
+      "'use strict';\n\nvar bar = require('foo');\nvar foo = \"yeah\"\nbar.what();\nmodule.exports = bar",
       false,
       false);
 
     test("should transpile to commonjs with strict mode with default exports",
       "import bar from 'foo'\nvar foo = \"yeah\";\nbar.what();\nexport default bar",
-      "(function () {\n\n\t'use strict';\n\n\tvar bar = require('foo');\n\n\tvar foo = \"yeah\";\n\tbar['default'].what();\n\texports['default'] = bar['default']\n\n}).call(global);",
+      "'use strict';\n\nvar bar = require('foo');\n\nvar foo = \"yeah\";\nbar['default'].what();\nexports['default'] = bar['default']",
       true,
       false);
 
